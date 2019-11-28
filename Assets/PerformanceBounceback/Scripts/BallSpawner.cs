@@ -28,8 +28,7 @@ public class BallSpawner : MonoBehaviour {
             _PooledBalls.Add(obj);
         }
     }
-
-    public GameObject GetPooledBall()
+    public GameObject GetBall()
     {
         _NumOfBalls++;
         if (_NumOfBalls > (_AmountOfBalls - 1))
@@ -44,17 +43,17 @@ public class BallSpawner : MonoBehaviour {
         if(_CoolDown <= 0)
         {
             _CoolDown = _CollLength;
-            SpawnBall();
+            BallSpawing();
         }		
 	}
 
-    void SpawnBall()
+    void BallSpawing()
     {
-        GameObject selectedBall = BallSpawner._CurrBall.GetPooledBall();
-        selectedBall.transform.position = transform.position;
-        Rigidbody selectedRigidbody = selectedBall.GetComponent<Rigidbody>();
-        selectedRigidbody.velocity = Vector3.zero;
-        selectedRigidbody.angularVelocity = Vector3.zero;
-        selectedBall.SetActive(true);
+        GameObject currBall = BallSpawner._CurrBall.GetBall();
+        currBall.transform.position = transform.position;
+        Rigidbody currRigidBody = currBall.GetComponent<Rigidbody>();
+        currRigidBody.velocity = Vector3.zero;
+        currRigidBody.angularVelocity = Vector3.zero;
+        currBall.SetActive(true);
     }
 }
