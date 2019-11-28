@@ -4,66 +4,53 @@ using UnityEngine;
 
 public class BallSpawner : MonoBehaviour {
 
-    public static BallSpawner current;
+    public static BallSpawner _CurrBall;
 
-    public GameObject pooledBall; //the prefab of the object in the object pool
-    public int ballsAmount = 20; //the number of objects you want in the object pool
-    public List<GameObject> pooledBalls; //the object pool
-    public static int ballPoolNum = 0; //a number used to cycle through the pooled objects
+    public GameObject _PoolingBall;
+    public int _AmountOfBalls = 20; 
+    public List<GameObject> _PooledBalls = new List<GameObject>(); 
+    public static int _NumOfBalls = 0;
 
-    private float cooldown;
-    private float cooldownLength = 0.5f;
+    private float _CoolDown;
+    private float _CollLength = 0.5f;
 
     void Awake()
     {
-        current = this; //makes it so the functions in ObjectPool can be accessed easily anywhere
+        _CurrBall = this; 
     }
 
     void Start()
     {
-        //Create Bullet Pool
-        pooledBalls = new List<GameObject>();
-        for (int i = 0; i < ballsAmount; i++)
+        for (int i = 0; i < _AmountOfBalls; i++)
         {
-            GameObject obj = Instantiate(pooledBall);
+            GameObject obj = Instantiate(_PoolingBall);
             obj.SetActive(false);
-            pooledBalls.Add(obj);
+            _PooledBalls.Add(obj);
         }
     }
 
-public GameObject GetPooledBall()
-{
-    ballPoolNum++;
-    if (ballPoolNum > (ballsAmount - 1))
+    public GameObject GetPooledBall()
     {
-        ballPoolNum = 0;
-    }
-    //if we’ve run out of objects in the pool too quickly, create a new one
-    if (pooledBalls[ballPoolNum].activeInHierarchy)
-    {
-        //create a new bullet and add it to the Pooled Ball List
-        GameObject obj = Instantiate(pooledBall);
-        pooledBalls.Add(obj);
-        ballsAmount++;
-        ballPoolNum = ballsAmount - 1;
-    }
-        Debug.Log("GetPooledBall returned ball number: " + ballPoolNum);
-        return pooledBalls[ballPoolNum];
-}
-   	
-	// Update is called once per frame
-	void Update () {
-        cooldown -= Time.deltaTime;
-        if(cooldown <= 0)
+        _NumOfBalls++;
+        if (_NumOfBalls > (_AmountOfBalls - 1))
         {
-            cooldown = cooldownLength;
+            _NumOfBalls = 0;
+        }
+        return _PooledBalls[_NumOfBalls];
+    }
+   	
+	void Update () {
+        _CoolDown -= Time.deltaTime;
+        if(_CoolDown <= 0)
+        {
+            _CoolDown = _CollLength;
             SpawnBall();
         }		
 	}
 
     void SpawnBall()
     {
-        GameObject selectedBall = BallSpawner.current.GetPooledBall();
+        GameObject selectedBall = BallSpawner._CurrBall.GetPooledBall();
         selectedBall.transform.position = transform.position;
         Rigidbody selectedRigidbody = selectedBall.GetComponent<Rigidbody>();
         selectedRigidbody.velocity = Vector3.zero;

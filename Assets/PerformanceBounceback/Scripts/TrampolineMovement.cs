@@ -5,18 +5,23 @@ using UnityEngine;
 public class TrampolineMovement : MonoBehaviour {
 
     public Vector3 direction = new Vector3(1,0,0);
-    public float moveSpeed = 3.5f;
-    public float moveTime = 3f;
-    private float time;
-	
-	// Update is called once per frame
-	void Update () {
-        time += Time.deltaTime;
-        if(time > moveTime)
+    public float _MoveSpeed = 3.5f;
+    public float _MoveTime = 3f;
+    private float _Time;
+    private Rigidbody _Rg;
+
+    void Start() {
+        _Rg = GetComponent<Rigidbody>();
+    }
+    void Update () {
+        _Time += Time.deltaTime;
+        if(_Time > _MoveTime)
         {
-            time = 0;
+            _Time = 0;
             direction = direction * -1;
-        }
-        transform.position += direction * Time.deltaTime * moveSpeed;		
+        }		
 	}
+    void FixedUpdate() {
+        _Rg.MovePosition(transform.position += direction * Time.deltaTime * _MoveSpeed);
+    }
 }
